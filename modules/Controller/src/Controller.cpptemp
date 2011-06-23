@@ -1,0 +1,85 @@
+/*
+ * Controller.cpp
+ *
+ *  Created on: Aug 30, 2010
+ *      Author: robotics
+ */
+
+#include "Controller.h"
+#include "Surveyor.h"
+#include <iostream> 
+using namespace std; 
+
+Controller::Controller(PlayerCc::PlayerClient* pc, Map* m, string nm, string t) :
+  pCli(pc), localMap(m), name(nm), type(t) {
+  
+  cout << "creating new controller" << endl;
+  // init itl
+  //itl = new Localization(localMap, 41, pc);
+  //itl = new Localization(localMap, 41);
+  
+  // startup the robot
+  //robot = new Robot(*pCli, itl, name, type);
+  
+  //mc = rbt->getMonteCarlo();    
+  //Graph * navGraph = new Graph(localMap, true, 30);		
+  //Node n; 
+  //planner = new PathPlanner(*navGraph,n,n); 
+}
+
+bool Controller::Connect(string shost, int sport){
+  return robot->Connect(shost, sport); 
+}
+
+void Controller::operator()() {
+  // enter main loop
+  while (robot->GetState() != STATE_QUIT) {
+    // update the sensor readings 
+    //updateLocalization();
+
+    // Update the robot.
+    robot->Update();
+
+    // Update behavior.
+    updateBehavior();
+
+    // Take a quick breath.
+    usleep(100000);
+  }
+}
+
+void Controller::updateLocalization(){
+  //pCli->ReadIfWaiting(); // which one?  
+  itl->update();
+}
+
+
+/* this is the main control behavior function */
+void Controller::updateBehavior() {
+  if ( isTargetSet() ) {
+    if ( !isTargetReached() ) {
+      if ( isPlanValid() ){
+	// choose the immediate goal point from path
+      }
+      else {
+	// this can only happen if there is a sudden change in position estimate. Updating the
+	// starting point is necessary to get a new path
+	//Position p = itl->getPosition();
+	//Node n(1, p->getX(), p->getY());
+	//planner->setSource(n); 
+	planner->calcPath();
+      }  
+    }
+  }
+}
+
+// true if there is a plan and location info and the plan still makes sense. 
+// false if plan is null and position estimate makes a sudden jump.
+bool Controller::isPlanValid(){}
+
+// true if the position estimate is rather good (?) and the robot is in the same vicinity (ft 2) with the goal point
+bool Controller::isTargetReached(){}
+
+bool Controller::isTargetSet(){
+  return ( planner->getTarget().getID() != Node::invalid_node_index ) ;
+}

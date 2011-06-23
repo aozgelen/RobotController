@@ -1,0 +1,57 @@
+#ifndef CONTROLLER_H
+#define CONTROLLER_H
+
+#include "definitions.h"
+
+#include "robot.h"
+#include "metrobotics.h"
+#include "Localization.h"
+#include "PathPlanner.h"
+#include <MonteCarlo.h>
+#include "MonteCarloDebugger.h"
+
+#include "libplayerc++/playerc++.h"
+#include "boost/asio.hpp"
+#include "boost/shared_ptr.hpp"
+#include <stdint.h>
+#include <stdlib.h>
+
+class Controller {
+public:
+  Controller(PlayerCc::PlayerClient*, Map*, string, string );  
+  void operator()();
+  
+  void initMCDebugger(){
+    itl->setMCDebugger();
+  }
+
+  MonteCarloDebugger* getMCDebugger(){ return itl->getMCDebugger(); }
+
+  bool Connect(string, int);
+
+  // for VisualDebugger
+  PathPlanner* getPlanner() { return planner; }
+  Localization* getLocalization() { return itl; }
+  Robot* getRobot() { return robot; }
+  Graph * getNavgraph(){ return planner->getGraph(); }
+private:
+  string name; 
+  string type; 
+
+  // binding to player
+  PlayerClient * pCli; 
+
+  // connectors to modules
+  PathPlanner * planner; 
+  Robot * robot;
+  Localization * itl; 
+  Map * localMap; 
+
+  void updateLocalization(); 
+  void updateBehavior();
+  bool isPlanValid(); 
+  bool isTargetReached();
+  bool isTargetSet(); 
+};
+
+#endif /* CONTROLLER_H */

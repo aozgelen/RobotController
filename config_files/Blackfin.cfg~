@@ -1,0 +1,11 @@
+driver
+(
+  name "PlayerSRV"
+  plugin "Blackfin_Driver.so"
+  provides ["position2d:0" "camera:0"]
+  ip "192.168.1.16"
+  image_size "320x240"
+)
+
+
+

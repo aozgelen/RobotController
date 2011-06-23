@@ -1,0 +1,33 @@
+Introduction:
+	This program is a collection of low-level control functions of a robot. Each robot 
+    	posess different type of sensors and hardware, therefore the some of these behaviors
+    	may not be available and/or may execute differently depending on the platform.
+    	Low level behaviors implemented: 
+    	1. Localization: vision-based version development is in progress. TODO: ranger-based 
+    	2. Path planning: given a map builds a navigation graph and finds the shortest path.  
+    	3. Obstacle avoidance: Not implemented yet TODO. 
+    	4. Mapping: TODO 
+    	5. Perception: Vision-based version TODO: ranger
+    	6. Controller: basic behavior control
+       	Also, to for debugging a visual debugger tool is available. 
+
+
+Compiling:
+	0. cd into 'modules' dir.
+	1. Run 'make' to build the libraries and the .controller executable
+    	2. Run 'make clean' to delete object files and the controller (doesn't rm libraries)
+    	3. Run 'make purge' to delete all *.a files from lib directory. 
+   	4. TODO: Run 'make docs' to install the documentation files into the /doc directory.
+
+Usage:
+	1. Run ./controller with:
+	    -d option (optional) to run with the visual debugger
+	    -f option to specify the location of the configuration file. This file contains
+	       * ip and port information of the central server
+	       * map filename and path
+	       * an entry for each robot containing:
+	       	 i. ip and port information of the player server
+		 ii. robot's label
+		 iii. robot's type (aibo, surveyor, scribbler, nxt)
+		 
+
